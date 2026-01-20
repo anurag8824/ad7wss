@@ -8,9 +8,11 @@ interface CommissionRow {
   cname: string;
   milaCasinoComm: number;
   milaSportsComm: number;
+  milaMatkaComm: number;    // ✅
   milaTotalComm: number;
   denaCasinoComm: number;
   denaSportsComm: number;
+  denaMatkaComm: number;    // ✅
   denaTotalComm: number;
   date?: string;
 }
@@ -38,8 +40,12 @@ const CommisionLenden: React.FC = () => {
   const processCommissionTable = (data: any[][]): CommissionRow[] => {
     const milaCasinoMap: Record<string, number> = {};
     const milaSportsMap: Record<string, number> = {};
+    const milaMatkaMap: Record<string, number> = {};
+
     const denaCasinoMap: Record<string, number> = {};
     const denaSportsMap: Record<string, number> = {};
+    const denaMatkaMap: Record<string, number> = {};
+
     const usernameMap: Record<string, string> = {};
     const cnameMap: Record<string, string> = {};
 
@@ -49,6 +55,7 @@ const CommisionLenden: React.FC = () => {
     sourceArray.forEach((entry: any) => {
       const childId = entry.ChildId;
       const isFancy = entry.Fancy === true;
+      const isMatka = entry?.narration?.includes("Matka Bet"); // ✅
 
       // const mila = entry.commissionlega || 0;
       // const dena = entry.commissiondega || 0;
@@ -69,11 +76,17 @@ const CommisionLenden: React.FC = () => {
       // Init maps
       if (!milaCasinoMap[childId]) milaCasinoMap[childId] = 0;
       if (!milaSportsMap[childId]) milaSportsMap[childId] = 0;
+      if (!milaMatkaMap[childId]) milaMatkaMap[childId] = 0;   // ✅
+
       if (!denaCasinoMap[childId]) denaCasinoMap[childId] = 0;
       if (!denaSportsMap[childId]) denaSportsMap[childId] = 0;
+      if (!denaMatkaMap[childId]) denaMatkaMap[childId] = 0;   // ✅
 
-      // Sort into sports or casino
-      if (isFancy) {
+
+      if (isMatka) {
+        milaMatkaMap[childId] += mila;
+        denaMatkaMap[childId] += dena;
+      } else if (isFancy) {
         milaSportsMap[childId] += mila;
         denaSportsMap[childId] += dena;
       } else {
@@ -93,29 +106,41 @@ const CommisionLenden: React.FC = () => {
     let totalMilaSports = 0;
     let totalDenaCasino = 0;
     let totalDenaSports = 0;
+    let totalMilaMatka = 0;
+let totalDenaMatka = 0;
+
+
 
     const result: CommissionRow[] = [];
 
     allChildIds.forEach((id) => {
       const milaCasino = milaCasinoMap[id] || 0;
       const milaSports = milaSportsMap[id] || 0;
+      const milaMatka = milaMatkaMap[id] || 0;
+
       const denaCasino = denaCasinoMap[id] || 0;
       const denaSports = denaSportsMap[id] || 0;
+      const denaMatka = denaMatkaMap[id] || 0;
+
 
       totalMilaCasino += milaCasino;
       totalMilaSports += milaSports;
       totalDenaCasino += denaCasino;
       totalDenaSports += denaSports;
+      totalMilaMatka += milaMatka;
+totalDenaMatka += denaMatka;
 
       result.push({
         name: usernameMap[id] || id,
         cname: cnameMap[id] || id,
         milaCasinoComm: milaCasino,
         milaSportsComm: milaSports,
-        milaTotalComm: milaCasino + milaSports,
+        milaMatkaComm: milaMatka,
+        milaTotalComm: milaCasino + milaSports + milaMatka,
         denaCasinoComm: denaCasino,
         denaSportsComm: denaSports,
-        denaTotalComm: denaCasino + denaSports,
+        denaMatkaComm: denaMatka,
+        denaTotalComm: denaCasino + denaSports + denaMatka,
       });
     });
 
@@ -124,10 +149,12 @@ const CommisionLenden: React.FC = () => {
       cname: "All",
       milaCasinoComm: totalMilaCasino,
       milaSportsComm: totalMilaSports,
-      milaTotalComm: totalMilaCasino + totalMilaSports,
+      milaMatkaComm: totalMilaMatka,
+      milaTotalComm: totalMilaCasino + totalMilaSports + totalMilaMatka,
       denaCasinoComm: totalDenaCasino,
       denaSportsComm: totalDenaSports,
-      denaTotalComm: totalDenaCasino + totalDenaSports,
+      denaMatkaComm: totalDenaMatka,
+      denaTotalComm: totalDenaCasino + totalDenaSports + totalDenaMatka ,
     });
 
     //console.log(result, "ressss")
@@ -165,15 +192,22 @@ const CommisionLenden: React.FC = () => {
 
     let totalMilaCasino = 0;
     let totalMilaSports = 0;
+    let totalMilaMatka = 0;
     let totalDenaCasino = 0;
     let totalDenaSports = 0;
+    let totalDenaMatka = 0;
+
 
     const rows = filtered.map((item: any, index: number) => {
       const isFancy = item.Fancy === true;
+      const isMatka = item?.narration?.includes("Matka Bet"); // ✅
       const mila = item.commissionlega || 0;
       const dena = item.commissiondega || 0;
 
-      if (isFancy) {
+      if (isMatka) {
+        totalMilaMatka += mila;
+        totalDenaMatka += dena;
+      } else if (isFancy) {
         totalMilaSports += mila;
         totalDenaSports += dena;
       } else {
@@ -187,8 +221,11 @@ const CommisionLenden: React.FC = () => {
           <td>{item.narration || "N/A"}</td>
           <td>{!isFancy ? mila.toFixed(2) : "-"}</td>
           <td>{isFancy ? mila.toFixed(2) : "-"}</td>
+          <td>{isMatka ? mila.toFixed(2) : "-"}</td>
           <td>{!isFancy ? dena.toFixed(2) : "-"}</td>
           <td>{isFancy ? dena.toFixed(2) : "-"}</td>
+          <td>{isMatka ? dena.toFixed(2) : "-"}</td>
+
         </tr>
       );
     });
@@ -200,8 +237,12 @@ const CommisionLenden: React.FC = () => {
         </td>
         <td>{totalMilaCasino.toFixed(2)}</td>
         <td>{totalMilaSports.toFixed(2)}</td>
+        <td>{totalMilaMatka.toFixed(2)}</td>
+
         <td>{totalDenaCasino.toFixed(2)}</td>
         <td>{totalDenaSports.toFixed(2)}</td>
+        <td>{totalDenaMatka.toFixed(2)}</td>
+
       </tr>
     );
 
@@ -327,22 +368,24 @@ const CommisionLenden: React.FC = () => {
                   <tr>
                     <th
                       style={{
-                        borderRightColor: "darkgoldenrod",
+                        borderRightColor: "black",
                         borderRightWidth: "20px",
                       }}
-                      colSpan={4}
+                      colSpan={5}
                     >
                       MILA HAI
                     </th>
-                    <th colSpan={4}>DENA HAI</th>
+                    <th colSpan={5}>DENA HAI</th>
                   </tr>
                   <tr>
                     <th>Name</th>
                     <th>M Comm</th>
                     <th>S Comm</th>
+                    <th>Mat Comm</th>
+
                     <th
                       style={{
-                        borderRightColor: "darkgoldenrod",
+                        borderRightColor: "black",
                         borderRightWidth: "20px",
                       }}
                     >
@@ -350,6 +393,8 @@ const CommisionLenden: React.FC = () => {
                     </th>
                     <th>M Comm</th>
                     <th>S Comm</th>
+                    <th>Mat Comm</th>
+
                     <th>Total Comm</th>
                   </tr>
                 </>
@@ -360,8 +405,10 @@ const CommisionLenden: React.FC = () => {
                     <th>Narration</th>
                     <th>M Mila</th>
                     <th>S Mila</th>
+                    <th>Mat Mila</th>
                     <th>M Dena</th>
                     <th>S Dena</th>
+                    <th>Mat Dena</th>
                   </tr>
                 </>
               )}
@@ -406,9 +453,11 @@ const CommisionLenden: React.FC = () => {
                               {row.milaCasinoComm.toFixed(2)}
                             </td>
                             <td>{row.milaSportsComm.toFixed(2)}</td>
+                            <td>{row.milaMatkaComm.toFixed(2)}</td>
+
                             <td
                               style={{
-                                borderRightColor: "darkgoldenrod",
+                                borderRightColor: "black",
                                 borderRightWidth: "20px",
                               }}
                             >
@@ -416,6 +465,7 @@ const CommisionLenden: React.FC = () => {
                             </td>
                             <td>{row.denaCasinoComm.toFixed(2)}</td>
                             <td>{row.denaSportsComm.toFixed(2)}</td>
+                            <td>{row.denaMatkaComm.toFixed(2)}</td>
                             <td>{row.denaTotalComm.toFixed(2)}</td>
                           </tr>
                         )

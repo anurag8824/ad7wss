@@ -521,7 +521,7 @@ const AdminDashboard = () => {
                 <div className="card ">
                   <div className="card-header h6 ng-binding">
                     {/* Match/Sess Comm ( {userState?.user?.partnership[1]?.ownRatio}% / 4% ) */}
-                    Match/Sess Comm ( {detail?.mcom ?? 0}% / {detail?.scom ?? 0}
+                    Match/Sess/Matka Comm ( {detail?.mcom ?? 0}% / {detail?.scom ?? 0} / {detail?.matcom}
                     % )
                   </div>
                 </div>

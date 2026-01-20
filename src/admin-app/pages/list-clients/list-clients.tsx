@@ -215,7 +215,7 @@ const ListClients = () => {
     setDialog(types);
   };
 
-  const [openInput, setInput] = React.useState<any>(false);
+  // const [openInput, setInput] = React.useState<any>(false);
 
   const closeModal = (type: string) => {
     const types = { ...showDialog, [type]: false };
@@ -582,10 +582,10 @@ const ListClients = () => {
   const finalExposer = (userB: any) => {
     const ex = userB?.exposer?.toString() || "0";
     const cex = userB?.casinoexposer?.toString() || "0";
-     const cmex = userB?.matkaexposer?.toString() || "0";
+    const cmex = userB?.matkaexposer?.toString() || "0";
 
     console.log(ex);
-    const finalE = parseFloat(ex) + +parseFloat(cex) + + parseFloat(cmex);
+    const finalE = parseFloat(ex) + +parseFloat(cex) + +parseFloat(cmex);
     return finalE.toFixed(2);
   };
 
@@ -623,7 +623,8 @@ const ListClients = () => {
 
   console.log(getRoleOptions, "getrkollee");
 
-  const [amount, setAmount] = useState("");
+  const [openMatkaUserId, setOpenMatkaUserId] = useState<string | null>(null);
+  const [matkaAmount, setMatkaAmount] = useState<{ [key: string]: number }>({});
 
   const unnmae = useParams().username;
   const [engageModalOpen, setEngageModalOpen] = useState(false);
@@ -631,11 +632,36 @@ const ListClients = () => {
     { matchName: string; exposure: number; date: string }[]
   >([]);
 
-  const updatematkalimit = (idd: any, amount: any) => {
-    console.log(idd, "loggg");
+  const handleOpenMatkaLimit = (user: any) => {
+    setOpenMatkaUserId(user._id);
+
+    setMatkaAmount((prev) => ({
+      ...prev,
+      [user._id]: user?.matkalimit || 0,
+    }));
+  };
+
+  const handleAmountChange = (
+    userId: any,
+    value: number
+    // maxParentMatkaLimit: number
+  ) => {
+    // if (value > maxParentMatkaLimit) {
+    //   toast.error(`Max limit ${maxParentMatkaLimit} se zyada nahi ho sakti`);
+    //   return;
+    // }
+
+    setMatkaAmount((prev) => ({
+      ...prev,
+      [userId]: value,
+    }));
+  };
+
+  const updatematkalimit = (userId: any) => {
+    // console.log(idd, "loggg");
     const payload: any = {
-      _id: idd,
-      value: amount,
+      _id: userId,
+      value: matkaAmount[userId],
     };
 
     UserService.editMatkacom(payload)
@@ -873,9 +899,20 @@ const ListClients = () => {
                   </div>
                   <div className="float-right   col-md-4 grid gap-2 ">
                     <p className="text-right d-flex items-center justify-between bg-black p-2 rounded ">
+                      <p className="text-xl text-white">
+                        {newtype == "sadmin"
+                          ? "Sub Admin"
+                          : newtype == "suadmin"
+                          ? "Admin"
+                          : newtype == "smdl"
+                          ? "Master Agent"
+                          : newtype == "mdl"
+                          ? "Super Agent Master"
+                          : newtype == "dl"
+                          ? "Agent Master"
+                          : "Client"}
+                      </p>
 
-                       <p className="text-xl text-white">{newtype == "sadmin" ? "Sub Admin" : newtype == "suadmin" ? "Admin" : newtype == "smdl" ? "Master Agent" :newtype == "mdl" ? "Super Agent Master" :newtype == "dl" ? "Agent Master" : "Client" }</p>
-                     
                       {username ? (
                         <CustomLink
                           to={`/add-user/${username}/${newtype}`}
@@ -895,27 +932,29 @@ const ListClients = () => {
 
                     <div className="flex item-center flex-col gap-1 mb-2">
                       <div className="px-10">
-                      <input
-                        type="text"
-                        placeholder=""
-                        className="mx-input mt-"
-                        onChange={(e) => debouncedChangeHandler(e.target.value)}
-                      />
+                        <input
+                          type="text"
+                          placeholder=""
+                          className="mx-input mt-"
+                          onChange={(e) =>
+                            debouncedChangeHandler(e.target.value)
+                          }
+                        />
                       </div>
                       <div className="d-flex justify-content-center gap-3">
-                      <button
-                        className="btn btn-primar border   "
-                        style={{ backgroundColor: "#1d2d3d", color: "#fff" }}
-                      >
-                        Search
-                      </button>
+                        <button
+                          className="btn btn-primar border   "
+                          style={{ backgroundColor: "#1d2d3d", color: "#fff" }}
+                        >
+                          Search
+                        </button>
 
-                      <button
-                        className="btn btn-primar border   "
-                        style={{ backgroundColor: "#dc3545", color: "#fff" }}
-                      >
-                        Reset
-                      </button>
+                        <button
+                          className="btn btn-primar border   "
+                          style={{ backgroundColor: "#dc3545", color: "#fff" }}
+                        >
+                          Reset
+                        </button>
                       </div>
                     </div>
                   </div>
@@ -986,7 +1025,7 @@ const ListClients = () => {
                         Balance{" "}
                       </th>
                       <th
-                        colSpan={2}
+                        colSpan={3}
                         className="text-center navbar-bet99 text-dark"
                         rowSpan={1}
                       >
@@ -1028,6 +1067,7 @@ const ListClients = () => {
                       {/* <th>Engaged</th> */}
                       <th>Match %</th>
                       <th>Session %</th>
+                      <th>Matka %</th>
 
                       {/* <th>Account Type</th> */}
                       {/* <th className="noExport">Actions</th> */}
@@ -1315,33 +1355,37 @@ const ListClients = () => {
                                       <BorderColorIcon /> Exposer Limit
                                     </a>
                                   )}
+                                  
 
                                   <a
-                                    className="border-b pb-2"
+                                    className="border-b"
                                     style={{ color: "#28a745" }}
-                                    onClick={() => {
-                                      setInput(true);
-                                    }}
+                                    onClick={() => handleOpenMatkaLimit(user)}
                                   >
                                     <BorderColorIcon /> Matka Limit
-                                    {openInput && (
+                                  
+                                  </a>
+                                  {openMatkaUserId === user._id && (
                                       <div
-                                        className="input-group input-group-sm mt-2"
+                                        className="input-group input-group-sm "
                                         style={{ maxWidth: "250px" }}
                                       >
                                         <input
                                           type="number"
                                           className="form-control text-end border-success"
-                                          placeholder="0.00"
-                                          style={{ boxShadow: "none" }}
-                                          value={amount} // State ko value se connect kiya
+                                          value={matkaAmount[user._id] ?? ""}
                                           onChange={(e) =>
-                                            setAmount(e.target.value)
+                                            handleAmountChange(
+                                              user._id,
+                                              Number(e.target.value)
+                                              // user?.parent?.matkaLimit || maxParentMatkalimit
+                                            )
                                           }
                                         />
+
                                         <button
                                           onClick={() =>
-                                            updatematkalimit(user._id, amount)
+                                            updatematkalimit(user._id)
                                           }
                                           className="btn btn-success"
                                           type="button"
@@ -1350,7 +1394,6 @@ const ListClients = () => {
                                         </button>
                                       </div>
                                     )}
-                                  </a>
 
                                   {/* isAdmin(user) && */}
                                   {userState?.user?.role == RoleType.admin && (
@@ -1782,6 +1825,7 @@ const ListClients = () => {
                             {/* <td>{user.exposerLimit ? user.exposerLimit : 0}</td> */}
                             <td>{user.mcom}%</td>
                             <td>{user.scom}%</td>
+                            <td>{user.matcom}%</td>
 
                             {/* <td>{RoleName[user.role!]}</td> */}
                           </tr>
