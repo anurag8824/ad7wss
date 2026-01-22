@@ -41,7 +41,7 @@ const MatkaPlayAdmin = () => {
     fetchMatkaList();
   }, [matchId,userState]);
 
-  const match = matkaList.find((item: any) => item.roundid == matchId);
+  const match = matkaList?.find((item: any) => item?.roundid == matchId);
 
 
   React.useEffect(() => {
@@ -131,19 +131,24 @@ const MatkaPlayAdmin = () => {
 
   //console.log(matkastake, "makrkk");
 
-   const openTime = moment()
-        .tz("Asia/Kolkata")
-        .hour(match.opentime.hour)
-        .minute(match.opentime.minute)
-        .second(0)
-        .format("DD-MM-YYYY hh:mm A");
-    
-      const closeTime = moment()
-        .tz("Asia/Kolkata")
-        .hour(match.closetime.hour)
-        .minute(match.closetime.minute)
-        .second(0)
-        .format("DD-MM-YYYY hh:mm A");
+  const openTime = match?.opentime
+  ? moment()
+      .tz("Asia/Kolkata")
+      .hour(match.opentime.hour)
+      .minute(match.opentime.minute)
+      .second(0)
+      .format("DD-MM-YYYY hh:mm A")
+  : "--";
+
+const closeTime = match?.closetime
+  ? moment()
+      .tz("Asia/Kolkata")
+      .hour(match.closetime.hour)
+      .minute(match.closetime.minute)
+      .second(0)
+      .format("DD-MM-YYYY hh:mm A")
+  : "--";
+
 
   return (
     <div className="container w-100 p-0">
