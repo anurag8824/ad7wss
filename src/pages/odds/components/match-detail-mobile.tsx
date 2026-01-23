@@ -206,19 +206,19 @@ const shared = useParams().share
               </Fragment>
             )}
 
-             <div className=''>
+             {userState?.user?.role == "user"&&<div className=''>
              
               <div className=''>
                 <MyBetComponent />
               </div>
-            </div>
+            </div>}
 
-            <div className='card m-b-10 my-bet'>
+            {userState?.user?.role == "user"&&<div className='card m-b-10 my-bet'>
            
               <div className='card-body'>
                 <MyBetComponent22 />
               </div>
-            </div>
+            </div>}
             {props.marketDataList.stake && <PlaceBetBox stake={props.marketDataList.stake} />}
           </div>
           {/* <Tab eventKey='profile' title={`PLACED BET (${betCount})`}>
@@ -232,9 +232,8 @@ const shared = useParams().share
             </div> 
           </Tab> */}
             <div className="back-main-menu my-2">
-               {userState?.user?.role == "user" ?  <CustomLink to="/match/4">BACK TO INPLAY GAMES</CustomLink> :
-                <CustomLink to="/market-analysis">BACK TO INPLAY GAMES</CustomLink>}
-
+               {userState?.user?.role == "user" &&  <CustomLink to="/match/4">BACK TO INPLAY GAMES</CustomLink> }
+             
 
              </div>
         </div>

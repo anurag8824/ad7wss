@@ -860,20 +860,7 @@ const ClientBetsUser = () => {
                                             )}
                                           </td>
 
-                                          {/* <td className="text-center pt-1 pb-1">
-      {bet.action === 0 && (
-        <button className="btn-yes btn btn-sm p-1" style={{ fontSize: 'xx-small' }}>
-          <span className="badge badge-action" style={{ fontSize: 'xx-small' }}>L</span>
-          <span className="badge badge-light" style={{ fontSize: 'xx-small' }}>{bet.team}</span>
-        </button>
-      )}
-      {bet.action === 1 && (
-        <button className="btn-not btn btn-sm p-1" style={{ fontSize: 'xx-small' }}>
-          <span className="badge badge-action" style={{ fontSize: 'xx-small' }}>K</span>
-          <span className="badge badge-light" style={{ fontSize: 'xx-small' }}>{bet.team}</span>
-        </button>
-      )}
-    </td> */}
+                                        
                                           {bet?.status == "pending" && (
                                             <td
                                               className={`pt-2 pb-1 ${
