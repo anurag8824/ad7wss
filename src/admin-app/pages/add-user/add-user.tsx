@@ -1133,7 +1133,7 @@ const AddUser = () => {
                 )}
 
                 <div
-                  style={{ display: "none" }}
+                  // style={{ display: "none" }}
                   className="row m-t-20 "
                   id="min-max-bet-div"
                 >
@@ -1141,7 +1141,7 @@ const AddUser = () => {
                     {/* <h4 className="m-b-20 col-md-12"></h4> */}
                     <table className="table table-striped table-borderedddd">
                       <thead
-                        // className={` ${thetype === "sadmin" ? "d-none" : "d-none"}`}
+                        className={` ${thetype === "sadmin" ? "d-" : "d-none"}`}
                       >
                         <tr>
                           <th />
@@ -1166,9 +1166,9 @@ const AddUser = () => {
                       </thead>
                       <tbody>
                         <tr
-                          // className={` ${
-                          //   thetype === "sadmin" ? "d-none" : "d-none"
-                          // }`}
+                          className={` ${
+                            thetype === "sadmin" ? "d-bl" : "d-none"
+                          }`}
                         >
                           <td></td>
                           {sportListState.sports?.map(({ _id, sportId }) =>
@@ -1182,9 +1182,9 @@ const AddUser = () => {
                           )}
                         </tr>
                         <tr
-                          // className={` ${
-                          //   thetype === "sadmin" ? "d-none" : "d-none"
-                          // }`}
+                          className={` ${
+                            thetype === "sadmin" ? "d-nonefff" : "d-none"
+                          }`}
                         >
                           <td>Provide Min Bet</td>
                           {sportListState.sports?.map(({ _id, sportId }) =>
@@ -1200,7 +1200,8 @@ const AddUser = () => {
                                   defaultValue={
                                     userData?.userSetting?.[sportId].minBet
                                   }
-                                  disabled={isPartnership}
+                                  // disabled={isPartnership}
+                                  disabled
                                   type="number"
                                 />
                                 <span className="error" />
@@ -1211,9 +1212,9 @@ const AddUser = () => {
                           )}
                         </tr>
                         <tr
-                          // className={` ${
-                          //   thetype === "sadmin" ? "d-none" : "d-none"
-                          // }`}
+                          className={` ${
+                            thetype === "sadmin" ? "d-nonefff" : "d-none"
+                          }`}
                         >
                           <td>Max Bet</td>
                           {sportListState.sports?.map(({ _id, sportId }) =>
@@ -1227,9 +1228,9 @@ const AddUser = () => {
                           )}
                         </tr>
                         <tr
-                          // className={` ${
-                          //   thetype === "sadmin" ? "d-none" : "d-none"
-                          // }`}
+                          className={` ${
+                            thetype === "sadmin" ? "d-nofffne" : "d-none"
+                          }`}
                         >
                           {/* c - 10000
                           fa - 50000
@@ -1248,7 +1249,9 @@ const AddUser = () => {
                                   defaultValue={
                                     sportId == 1 ? 200000	 : sportId == 2 ? 50000 : 10000
                                   }
-                                  disabled={isPartnership}
+                                  // disabled={isPartnership}
+                                  disabled
+
                                   min={0}
                                   type="number"
                                 />
@@ -1260,9 +1263,9 @@ const AddUser = () => {
                           )}
                         </tr>
                         <tr
-                          // className={` ${
-                          //   thetype === "sadmin" ? "d-none" : "d-none"
-                          // }`}
+                          className={` ${
+                            thetype === "sadmin" ? "d-nonfffe" : "d-none"
+                          }`}
                         >
                           <td>Delay</td>
                           {sportListState.sports?.map(({ _id, sportId }) =>
@@ -1276,7 +1279,7 @@ const AddUser = () => {
                           )}
                         </tr>
                         <tr
-                          // className={` ${thetype === "sadmin" ? "d-none" : "d-none"}`}
+                          className={` ${thetype === "sadmin" ? "d-nonffe" : "d-none"}`}
                         >
                           <td>Provide Delay</td>
                           {sportListState.sports?.map(({ _id, sportId }) =>
@@ -1291,7 +1294,8 @@ const AddUser = () => {
                                   defaultValue={
                                     userData?.userSetting?.[sportId].delay
                                   }
-                                  disabled={isPartnership}
+                                  // disabled={isPartnership}
+                                  disabled
                                   type="number"
                                 />
                                 <span className="error" />
