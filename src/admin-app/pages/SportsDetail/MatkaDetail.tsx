@@ -370,6 +370,7 @@ const MatkaDetail = () => {
             
               const closeTime = moment()
                 .tz("Asia/Kolkata")
+                .add(game.gamename === "Disawar" ? 1 : 0, "day")
                 .hour(game.closetime.hour)
                 .minute(game.closetime.minute)
                 .second(0)
@@ -392,11 +393,7 @@ const MatkaDetail = () => {
                   </h5>
 
                   <p className="mb-1 py-2">
-                    {moment()
-                      .hour(9)
-                      .minute(0)
-                      .second(0)
-                      .format("DD-MM-YYYY hh:mm A")}
+                  {openTime}
                   </p>
                 </div>
               );
